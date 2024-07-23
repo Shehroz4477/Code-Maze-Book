@@ -28,6 +28,11 @@ else
 app.UseHttpsRedirection();
 //Enables using static files for the request.
 app.UseStaticFiles();
+//Forward proxy headers to the current request.
+app.UseForwardedHeaders(new ForwardedHeadersOptions
+{
+    ForwardedHeaders = ForwardedHeaders.All
+});
 
 //CORS configuration added to the application’s pipeline
 app.UseCors("CorsPolicy");
