@@ -26,6 +26,8 @@ else
 }
 
 app.UseHttpsRedirection();
+//Enables using static files for the request.
+app.UseStaticFiles();
 
 //CORS configuration added to the application’s pipeline
 app.UseCors("CorsPolicy");
