@@ -1,18 +1,24 @@
-﻿namespace CompanyEmployees.Extensions
+﻿namespace CompanyEmployees.Extensions;
+
+public static class ServiceExtensions
 {
-    public static class ServiceExtensions
+    public static void ConfigureCors(this IServiceCollection services)
     {
-        public static void ConfigureCors(this IServiceCollection services)
+        services.AddCors(options =>
         {
-            services.AddCors(options =>
+            options.AddPolicy("CorsPolicy", builder =>
             {
-                options.AddPolicy("CorsPolicy", builder =>
-                {
-                    builder.AllowAnyOrigin()
-                    .AllowAnyMethod()
-                    .AllowAnyHeader();
-                });
+                builder.AllowAnyOrigin()
+                .AllowAnyMethod()
+                .AllowAnyHeader();
             });
-        }
+        });
+    }
+    public static void ConfigureIISIntegration(this IServiceCollection services)
+    {
+        services.Configure<IISOptions>(options =>
+        {
+            //TODO
+        });
     }
 }
