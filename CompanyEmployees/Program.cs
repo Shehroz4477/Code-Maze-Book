@@ -39,6 +39,11 @@ app.UseCors("CorsPolicy");
 
 app.UseAuthorization();
 
+app.Run(async context =>
+{
+   await context.Response.WriteAsync("Middelware code execute");
+});
+
 app.MapControllers();
 
 app.Run();
