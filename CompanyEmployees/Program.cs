@@ -39,9 +39,17 @@ app.UseCors("CorsPolicy");
 
 app.UseAuthorization();
 
+app.Use(async (context,next) =>
+{
+    Console.WriteLine("Code execute before jump to next delegate in the Use method");
+    await next.Invoke();
+    Console.WriteLine("Code execute After jump to back from next delegate in the Use method");
+});
+
 app.Run(async context =>
 {
-   await context.Response.WriteAsync("Middelware code execute");
+    Console.WriteLine($"Writing the response to the client in the Run method");
+    await context.Response.WriteAsync("Middelware code execute");
 });
 
 app.MapControllers();
