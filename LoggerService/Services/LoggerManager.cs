@@ -12,21 +12,21 @@ public class LoggerManager : ILoggerManager
     }
     public void LogDebug(string message)
     {
-        throw new NotImplementedException();
+        _logger.Debug(message);
     }
 
     public void LogError(string message)
     {
-        throw new NotImplementedException();
+       _logger.Error(message); 
     }
 
     public void LogInfo(string message)
     {
-        throw new NotImplementedException();
+        _logger.Info(message);
     }
 
     public void LogWarn(string message)
     {
-        throw new NotImplementedException();
+        _logger.Warn(message);
     }
 }
