@@ -12,7 +12,7 @@ namespace Repository
     public abstract class RepositoryBase<T> : IRepositoryBase<T> where T : class
     {
         protected RepositoryContext Context;
-        protected RepositoryBase(RepositoryContext repositoryContext) => Context = repositoryContext;
+        public RepositoryBase(RepositoryContext repositoryContext) => Context = repositoryContext;
         public void Create(T entity) => Context.Set<T>().Add(entity);
         public void Update(T entity) => Context.Set<T>().Update(entity);
         public void Delete(T entity) => Context.Set<T>().Remove(entity);
