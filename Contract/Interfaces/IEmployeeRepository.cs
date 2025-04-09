@@ -4,9 +4,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Contract.Interfaces
+namespace Contract.Interfaces;
+
+public interface IEmployeeRepository
 {
-    public interface IEmployeeRepository
-    {
-    }
 }

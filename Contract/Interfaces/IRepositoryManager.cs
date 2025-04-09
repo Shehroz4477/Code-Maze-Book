@@ -6,6 +6,9 @@ using System.Threading.Tasks;
 
 namespace Contract.Interfaces;
 
-public interface ICompanyRepository
+public interface IRepositoryManager
 {
+    ICompanyRepository Company { get; }
+    IEmployeeRepository Employee { get; }
+    void save();
 }
