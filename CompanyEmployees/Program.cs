@@ -15,8 +15,10 @@ builder.Services.ConfigureCors();
 builder.Services.ConfigureIISIntegration();
 // Logger Service Configuration
 builder.Services.ConfigureLoggerService();
-// Repository Manager Confiduration
+// Repository Manager Configuration
 builder.Services.ConfigureRepositoryManager();
+// Service Manager Configuration
+builder.Services.ConfigureServiceManager();
 
 builder.Services.AddControllers();
 
