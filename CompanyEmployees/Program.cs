@@ -15,6 +15,12 @@ builder.Services.ConfigureCors();
 builder.Services.ConfigureIISIntegration();
 // Logger Service Configuration
 builder.Services.ConfigureLoggerService();
+// Repository Manager Configuration
+builder.Services.ConfigureRepositoryManager();
+// Service Manager Configuration
+builder.Services.ConfigureServiceManager();
+// SqlContext Configuartion
+builder.Services.ConfigureSqlContext(builder.Configuration);
 
 builder.Services.AddControllers();
 
