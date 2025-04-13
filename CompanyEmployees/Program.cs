@@ -19,6 +19,8 @@ builder.Services.ConfigureLoggerService();
 builder.Services.ConfigureRepositoryManager();
 // Service Manager Configuration
 builder.Services.ConfigureServiceManager();
+// SqlContext Configuartion
+builder.Services.ConfigureSqlContext(builder.Configuration);
 
 builder.Services.AddControllers();
 
