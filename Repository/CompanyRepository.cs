@@ -14,4 +14,9 @@ public class CompanyRepository: RepositoryBase<Company>, ICompanyRepository
     {
         //TODO 
     }
+
+    public IEnumerable<Company> GetAllCompanies(bool trackChanges) =>
+        FindAll(trackChanges)
+            .OrderBy(entity => entity.Name)
+            .ToList();
 }
