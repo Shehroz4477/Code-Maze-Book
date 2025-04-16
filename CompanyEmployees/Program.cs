@@ -17,12 +17,20 @@ builder.Services.ConfigureIISIntegration();
 builder.Services.ConfigureLoggerService();
 // Repository Manager Configuration
 builder.Services.ConfigureRepositoryManager();
-// Service Manager Configuration
+// Service Manager Configuration (Service Layer)
 builder.Services.ConfigureServiceManager();
 // SqlContext Configuartion
 builder.Services.ConfigureSqlContext(builder.Configuration);
+// Register AutoMapper Package
+builder.Services.AddAutoMapper(typeof(Program));
 
-builder.Services.AddControllers();
+#region Add Controller From CompanyEmployees.Prenstation (Presentation Layer)
+/// Without this code, our API wouldn’t work, and wouldn’t know where to 
+/// route incoming requests. But now, our app will find all of the controllers
+/// inside of the Presentation project and configure them with the
+/// framework. They are going to be treated the same as if they were defined conventionally.
+builder.Services.AddControllers().AddApplicationPart(typeof(CompanyEmployees.Presentation.AssemblyReference).Assembly);
+#endregion
 
 var app = builder.Build();
 
