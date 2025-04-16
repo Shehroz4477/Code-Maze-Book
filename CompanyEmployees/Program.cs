@@ -22,6 +22,8 @@ builder.Services.ConfigureRepositoryManager();
 builder.Services.ConfigureServiceManager();
 // SqlContext Configuartion
 builder.Services.ConfigureSqlContext(builder.Configuration);
+// Register AutoMapper Package
+builder.Services.AddAutoMapper(typeof(Program));
 
 #region Add Controller From CompanyEmployees.Prenstation (Presentation Layer)
 /// Without this code, our API wouldn’t work, and wouldn’t know where to 
