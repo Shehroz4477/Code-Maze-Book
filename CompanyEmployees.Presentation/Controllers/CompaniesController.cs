@@ -30,6 +30,7 @@ public class CompaniesController:ControllerBase
         //{
         //    return StatusCode(500, "Internal server error");
         //}
+        throw new Exception("Test");
         var companies = _service.CompanyService.GetAllCompanies(trackChanges: false);
         return Ok(companies);
     }
