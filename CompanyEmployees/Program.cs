@@ -1,4 +1,5 @@
 using CompanyEmployees.Extensions;
+using Contract.Interfaces;
 using Microsoft.AspNetCore.HttpOverrides;
 using NLog;
 
@@ -33,17 +34,20 @@ builder.Services.AddControllers().AddApplicationPart(typeof(CompanyEmployees.Pre
 #endregion
 
 var app = builder.Build();
-
+// Get Instance of ILoggerManger Service
+var logger = app.Services.GetRequiredService<ILoggerManager>();
+// Handling Errors Globally with the Build-In Middleware
+app.ConfigureExceptionHandler(logger);
 // Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
-{
-    app.UseDeveloperExceptionPage();
-}
-else
+if (app.Environment.IsProduction())
 {
     //Enables strict transport security headers
     app.UseHsts();
 }
+//else
+//{
+//    app.UseDeveloperExceptionPage();
+//}
 
 app.UseHttpsRedirection();
 //Enables using static files for the request.
