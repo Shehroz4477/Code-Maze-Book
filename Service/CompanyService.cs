@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using AutoMapper;
 using Contract.Interfaces;
 using Entities.Models;
 using Service.Contracts.Interfaces;
@@ -14,10 +15,12 @@ internal sealed class CompanyService: ICompanyService
 {
     private readonly IRepositoryManager _repository;
     private readonly ILoggerManager _logger;
-    public CompanyService(IRepositoryManager repository, ILoggerManager logger)
+    private readonly IMapper _mapper;
+    public CompanyService(IRepositoryManager repository, ILoggerManager logger, IMapper mapper)
     {
          _repository = repository;
         _logger = logger;
+        _mapper = mapper;
     }
 
     public IEnumerable<CompanyDto> GetAllCompanies(bool trackChanges)
@@ -25,7 +28,8 @@ internal sealed class CompanyService: ICompanyService
         try
         {
             var companies = _repository.Company.GetAllCompanies(trackChanges);
-            var companiesDto = companies.Select(company => new CompanyDto(company.Id, company.Name ?? "", string.Join(' ',company.Address,company.Country))).ToList();
+            var companiesDto = _mapper.Map<IEnumerable<CompanyDto>>(companies);
+                //companies.Select(company => new CompanyDto(company.Id, company.Name ?? "", string.Join(' ',company.Address,company.Country))).ToList();
             return companiesDto;
         }
         catch (Exception ex)

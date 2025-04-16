@@ -1,6 +1,5 @@
 using CompanyEmployees.Extensions;
 using Microsoft.AspNetCore.HttpOverrides;
-using Microsoft.AspNetCore.Routing;
 using NLog;
 
 var builder = WebApplication.CreateBuilder(args);
