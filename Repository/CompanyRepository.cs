@@ -19,4 +19,8 @@ public class CompanyRepository: RepositoryBase<Company>, ICompanyRepository
         FindAll(trackChanges)
             .OrderBy(entity => entity.Name)
             .ToList();
+
+    public Company GetCompany(Guid companyId, bool trackChanges) =>
+        FindByCondition(entity => entity.Id.Equals(companyId), trackChanges)
+        .SingleOrDefault();
 }

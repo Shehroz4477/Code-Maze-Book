@@ -42,4 +42,12 @@ internal sealed class CompanyService: ICompanyService
         //companies.Select(company => new CompanyDto(company.Id, company.Name ?? "", string.Join(' ',company.Address,company.Country))).ToList();
         return companiesDto;
     }
+
+    public CompanyDto GetCompany(Guid companyId, bool trackChanges)
+    {
+        var company = _repository.Company.GetCompany(companyId, trackChanges);
+        //Check if the company is null
+        var companyDto = _mapper.Map<CompanyDto>(company);
+        return companyDto;
+    }
 }
