@@ -1,4 +1,6 @@
+using CompanyEmployees;
 using CompanyEmployees.Extensions;
+using Contract.Interfaces;
 using Microsoft.AspNetCore.HttpOverrides;
 using NLog;
 
@@ -23,7 +25,8 @@ builder.Services.ConfigureServiceManager();
 builder.Services.ConfigureSqlContext(builder.Configuration);
 // Register AutoMapper Package
 builder.Services.AddAutoMapper(typeof(Program));
-
+// Register Global Exceptional Handling Service
+builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
 #region Add Controller From CompanyEmployees.Prenstation (Presentation Layer)
 /// Without this code, our API wouldn’t work, and wouldn’t know where to 
 /// route incoming requests. But now, our app will find all of the controllers
@@ -33,17 +36,21 @@ builder.Services.AddControllers().AddApplicationPart(typeof(CompanyEmployees.Pre
 #endregion
 
 var app = builder.Build();
-
+// Get Instance of ILoggerManger Service
+//var logger = app.Services.GetRequiredService<ILoggerManager>();
+// Handling Errors Globally with the Build-In Middleware
+//app.ConfigureExceptionHandler(logger);
+app.UseExceptionHandler(appError => { });
 // Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
-{
-    app.UseDeveloperExceptionPage();
-}
-else
+if (app.Environment.IsProduction())
 {
     //Enables strict transport security headers
     app.UseHsts();
 }
+//else
+//{
+//    app.UseDeveloperExceptionPage();
+//}
 
 app.UseHttpsRedirection();
 //Enables using static files for the request.
