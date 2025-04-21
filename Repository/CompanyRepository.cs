@@ -22,5 +22,5 @@ public class CompanyRepository: RepositoryBase<Company>, ICompanyRepository
 
     public Company GetCompany(Guid companyId, bool trackChanges) =>
         FindByCondition(entity => entity.Id.Equals(companyId), trackChanges)
-        .SingleOrDefault();
+            .SingleOrDefault();
 }

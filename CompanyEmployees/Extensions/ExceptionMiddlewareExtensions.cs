@@ -39,7 +39,7 @@ public static class ExceptionMiddlewareExtensions
 
                     await context.Response.WriteAsync(new ErrorDetails()
                     {
-                        SttausCode = context.Response.StatusCode,
+                        StatusCode = context.Response.StatusCode,
                         Message = "Internal Server Error."
                     }.ToString());
                 }

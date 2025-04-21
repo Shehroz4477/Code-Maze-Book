@@ -31,7 +31,7 @@ public class GlobalExceptionHandler : IExceptionHandler
 
             await httpContext.Response.WriteAsync(new ErrorDetails()
             {
-                SttausCode = httpContext.Response.StatusCode,
+                StatusCode = httpContext.Response.StatusCode,
                 Message    = httpContextFeature.Error.Message
             }.ToString());
         }
