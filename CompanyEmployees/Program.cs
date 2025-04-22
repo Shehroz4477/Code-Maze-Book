@@ -1,6 +1,7 @@
 using CompanyEmployees;
 using CompanyEmployees.Extensions;
 using Contract.Interfaces;
+using Microsoft.AspNetCore.Hosting.Server;
 using Microsoft.AspNetCore.HttpOverrides;
 using NLog;
 
@@ -32,7 +33,14 @@ builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
 /// route incoming requests. But now, our app will find all of the controllers
 /// inside of the Presentation project and configure them with the
 /// framework. They are going to be treated the same as if they were defined conventionally.
-builder.Services.AddControllers().AddApplicationPart(typeof(CompanyEmployees.Presentation.AssemblyReference).Assembly);
+builder.Services.AddControllers(config => {
+    // header:Accept
+    config.RespectBrowserAcceptHeader = true;
+    //if the client tries to negotiate for the media type the
+    //server doesn’t support, it should return the 406 Not Acceptable status
+    //code
+    config.ReturnHttpNotAcceptable = true;
+}).AddXmlDataContractSerializerFormatters().AddApplicationPart(typeof(CompanyEmployees.Presentation.AssemblyReference).Assembly);
 #endregion
 
 var app = builder.Build();
