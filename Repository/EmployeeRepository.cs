@@ -14,9 +14,11 @@ public class EmployeeRepository: RepositoryBase<Employee>, IEmployeeRepository
     {
         //TODO
     }
-
     public IEnumerable<Employee> GetEmployees(Guid companyId, bool trackChanges) =>
         FindByCondition(entity => entity.CompanyId.Equals(companyId), trackChanges)
             .OrderBy(entity => entity.Name)
             .ToList();
+    public Employee GetEmployee(Guid companyId, Guid id, bool trackChanges) =>
+        FindByCondition(entity => entity.CompanyId.Equals(companyId) && entity.Id.Equals(id), trackChanges)
+            .SingleOrDefault();
 }
