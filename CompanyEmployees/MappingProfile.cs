@@ -20,5 +20,7 @@ public class MappingProfile:Profile
                 "FullAddress",
                 source => source.MapFrom<string>(cmp => string.Join(' ', cmp.Address, cmp.Country))
             );
+
+        CreateMap<Employee, EmployeeDto>();
     }
 }
