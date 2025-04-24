@@ -1,8 +1,7 @@
 using CompanyEmployees;
 using CompanyEmployees.Extensions;
-using Contract.Interfaces;
-using Microsoft.AspNetCore.Hosting.Server;
 using Microsoft.AspNetCore.HttpOverrides;
+using Microsoft.AspNetCore.Mvc;
 using NLog;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -28,6 +27,11 @@ builder.Services.ConfigureSqlContext(builder.Configuration);
 builder.Services.AddAutoMapper(typeof(Program));
 // Register Global Exceptional Handling Service
 builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
+// Enable our custom responses for the API's from the Actions
+builder.Services.Configure<ApiBehaviorOptions>(options =>
+{
+    options.SuppressModelStateInvalidFilter = true;
+});
 #region Add Controller From CompanyEmployees.Prenstation (Presentation Layer)
 /// Without this code, our API wouldn’t work, and wouldn’t know where to 
 /// route incoming requests. But now, our app will find all of the controllers
