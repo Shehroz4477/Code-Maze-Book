@@ -23,7 +23,6 @@ internal sealed class CompanyService: ICompanyService
         _logger = logger;
         _mapper = mapper;
     }
-
     public IEnumerable<CompanyDto> GetAllCompanies(bool trackChanges)
     {
         //try
@@ -43,7 +42,6 @@ internal sealed class CompanyService: ICompanyService
         //companies.Select(company => new CompanyDto(company.Id, company.Name ?? "", string.Join(' ',company.Address,company.Country))).ToList();
         return companiesDto;
     }
-
     public CompanyDto GetCompany(Guid companyId, bool trackChanges)
     {
         var company = _repository.Company.GetCompany(companyId, trackChanges);
@@ -51,6 +49,16 @@ internal sealed class CompanyService: ICompanyService
         {
             throw new CompanyNotFoundException(companyId);
         }
+
+        var companyDto = _mapper.Map<CompanyDto>(company);
+        return companyDto;
+    }
+    public CompanyDto CreateCompany(CompanyForCreationDto companyCreation)
+    {
+        var company = _mapper.Map<Company>(companyCreation);
+
+        _repository.Company.CreateCompany(company);
+        _repository.Save();
 
         var companyDto = _mapper.Map<CompanyDto>(company);
         return companyDto;
