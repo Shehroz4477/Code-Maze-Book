@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using CompanyEmployees.Presentation.ModelBinders;
 using Microsoft.AspNetCore.Mvc;
 using Service.Contracts.Interfaces;
 using Shared.DataTransferObjects;
@@ -56,7 +57,7 @@ public class CompaniesController : ControllerBase
     }
 
     [HttpGet("collection/({ids})", Name = "CompanyCollection")]
-    public IActionResult GetCompanyCollection(IEnumerable<Guid> ids)
+    public IActionResult GetCompanyCollection([ModelBinder(BinderType = typeof(ArrayModelBinder))]IEnumerable<Guid> ids)
     {
         var companies = _service.CompanyService.GetByIds(ids, trackChanges: false);
         return Ok(companies);
