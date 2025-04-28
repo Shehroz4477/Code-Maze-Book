@@ -14,13 +14,15 @@ public class CompanyRepository: RepositoryBase<Company>, ICompanyRepository
     {
         //TODO 
     }
-
     public IEnumerable<Company> GetAllCompanies(bool trackChanges) =>
         FindAll(trackChanges)
             .OrderBy(entity => entity.Name)
             .ToList();
-
     public Company GetCompany(Guid companyId, bool trackChanges) =>
         FindByCondition(entity => entity.Id.Equals(companyId), trackChanges)
             .SingleOrDefault();
+    public void CreateCompany(Company company) => Create(company);
+    public IEnumerable<Company> GetByIds(IEnumerable<Guid> ids, bool trackChanges) =>
+        FindByCondition(entity => ids.Contains(entity.Id), trackChanges)
+            .ToList();
 }

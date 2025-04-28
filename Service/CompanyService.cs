@@ -23,7 +23,6 @@ internal sealed class CompanyService: ICompanyService
         _logger = logger;
         _mapper = mapper;
     }
-
     public IEnumerable<CompanyDto> GetAllCompanies(bool trackChanges)
     {
         //try
@@ -43,7 +42,6 @@ internal sealed class CompanyService: ICompanyService
         //companies.Select(company => new CompanyDto(company.Id, company.Name ?? "", string.Join(' ',company.Address,company.Country))).ToList();
         return companiesDto;
     }
-
     public CompanyDto GetCompany(Guid companyId, bool trackChanges)
     {
         var company = _repository.Company.GetCompany(companyId, trackChanges);
@@ -54,5 +52,50 @@ internal sealed class CompanyService: ICompanyService
 
         var companyDto = _mapper.Map<CompanyDto>(company);
         return companyDto;
+    }
+    public CompanyDto CreateCompany(CompanyForCreationDto companyCreation)
+    {
+        var company = _mapper.Map<Company>(companyCreation);
+
+        _repository.Company.CreateCompany(company);
+        _repository.Save();
+
+        var companyDto = _mapper.Map<CompanyDto>(company);
+        return companyDto;
+    }
+    public IEnumerable<CompanyDto> GetByIds(IEnumerable<Guid> ids, bool trackChanges)
+    {
+        if(ids == null)
+        {
+            throw new IdParametersBadRequestException();
+        }
+
+        var companies = _repository.Company.GetByIds(ids, trackChanges);
+        if(ids.Count() != companies.Count())
+        {
+            throw new CollectionByIdsBadRequestException();
+        }
+
+        var companiesDto = _mapper.Map<IEnumerable<CompanyDto>>(companies);
+        return companiesDto;
+    }
+
+    public (IEnumerable<CompanyDto> companies, string ids) CreateCompanyCollection(IEnumerable<CompanyForCreationDto> companyCollection)
+    {
+        if(companyCollection == null)
+        {
+            throw new CompanyCollectionBadRequest();
+        }
+
+        var companies = _mapper.Map<IEnumerable<Company>>(companyCollection);
+        foreach (var company in companies)
+        {
+            _repository.Company.CreateCompany(company);
+        }
+        _repository.Save();
+
+        var companyCollectionDto = _mapper.Map<IEnumerable<CompanyDto>>(companies);
+        var ids = string.Join(",", companyCollectionDto.Select(companyDto => companyDto.Id));
+        return (companies:companyCollectionDto, ids:ids);
     }
 }

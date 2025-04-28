@@ -21,6 +21,10 @@ public class MappingProfile:Profile
         //        source => source.MapFrom<string>(cmp => string.Join(' ', cmp.Address, cmp.Country))
         //    );
 
+        CreateMap<CompanyForCreationDto, Company>();
+
         CreateMap<Employee, EmployeeDto>();
+
+        CreateMap<EmployeeForCreationDto, Employee>();
     }
 }
