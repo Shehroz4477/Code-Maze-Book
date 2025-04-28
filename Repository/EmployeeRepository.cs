@@ -21,10 +21,10 @@ public class EmployeeRepository: RepositoryBase<Employee>, IEmployeeRepository
     public Employee GetEmployee(Guid companyId, Guid id, bool trackChanges) =>
         FindByCondition(entity => entity.CompanyId.Equals(companyId) && entity.Id.Equals(id), trackChanges)
             .SingleOrDefault();
-
     public void CreateEmployeeForCompany(Guid companyId, Employee employee, bool trackChanges)
     {
         employee.CompanyId = companyId;
         Create(employee);
     }
+    public void DeleteEmplyee(Employee employee) => Delete(employee);
 }
