@@ -19,10 +19,8 @@ public class ArrayModelBinder : IModelBinder
             return Task.CompletedTask;
         }
 
-        var providedValue = bindingContext.ValueProvider
-            .GetValue(bindingContext.ModelName)
-            .ToString();
-        if(string.IsNullOrEmpty(providedValue) )
+        var providedValue = bindingContext.ValueProvider.GetValue(bindingContext.ModelName).ToString();
+        if(string.IsNullOrEmpty(providedValue))
         {
             bindingContext.Result = ModelBindingResult.Success(null);
             return Task.CompletedTask;
@@ -31,13 +29,13 @@ public class ArrayModelBinder : IModelBinder
         var genericType = bindingContext.ModelType.GetTypeInfo().GenericTypeArguments[0];
         var converter = TypeDescriptor.GetConverter(genericType);
 
-        var objectArray = providedValue.Split(new[] { "," },StringSplitOptions.RemoveEmptyEntries)
-            .Select(x => converter.ConvertFromString(x.Trim()))
+        var objectArray = providedValue.Split(new[] { "," }, StringSplitOptions.RemoveEmptyEntries)
+            .Select(value => converter.ConvertFromString(value.Trim()))
             .ToArray();
 
-        var guidArray = Array.CreateInstance(genericType, objectArray.Length);
-        objectArray.CopyTo(guidArray, 0);
-        bindingContext.Model = guidArray;
+        var genericTypeArray = Array.CreateInstance(genericType, objectArray.Length);
+        objectArray.CopyTo(genericTypeArray, 0);
+        bindingContext.Model = genericTypeArray;
 
         bindingContext.Result = ModelBindingResult.Success(bindingContext.Model);
         return Task.CompletedTask;
