@@ -52,4 +52,16 @@ public class EmployeesController : ControllerBase
         _service.EmployeeService.DeleteEmployeeForComapny(companyId, id, trackChanges: false);
         return NoContent();
     }
+
+    [HttpPut("{id:guid}")]
+    public IActionResult UpdateEmployeeForCompany(Guid companyId, Guid id, [FromBody]EmployeeForUpdateDto employeeForUpdateDto)
+    {
+        if(employeeForUpdateDto == null)
+        {
+            return BadRequest("Employee data is missing for updation");
+        }
+
+        _service.EmployeeService.UpdateEmployeeForCompany(companyId, id, employeeForUpdateDto, comTrackChanges: false, empTrackChanges: true);
+        return NoContent();
+    }
 }
