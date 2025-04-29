@@ -13,4 +13,5 @@ public interface IEmployeeService
     EmployeeDto GetEmployee(Guid companyId, Guid id, bool trackChanges);
     EmployeeDto CreateEmployeeForComapny(Guid companyId, EmployeeForCreationDto employeeForCreationDto, bool trackChanges);
     void DeleteEmployeeForComapny(Guid companyId, Guid id, bool trackChanges);
+    void UpdateEmployeeForCompany(Guid companyId, Guid id, EmployeeForUpdateDto employeeForUpdateDto, bool comTrackChanges, bool empTrackChanges);
 }
