@@ -77,4 +77,16 @@ public class CompaniesController : ControllerBase
         _service.CompanyService.DeleteCompany(id, trackChanges:false);
         return NoContent();
     }
+
+    [HttpPut("{id:guid}")]
+    public IActionResult UpdateCompany(Guid id, [FromBody]CompanyForUpdateDto companyForUpdateDto)
+    {
+        if(companyForUpdateDto == null)
+        {
+            return BadRequest("Company details is missing for updation.");
+        }
+
+        _service.CompanyService.UpdateCompany(id, companyForUpdateDto, trackChanges:true);
+        return NoContent();
+    }
 }

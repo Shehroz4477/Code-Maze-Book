@@ -23,6 +23,8 @@ public class MappingProfile:Profile
 
         CreateMap<CompanyForCreationDto, Company>();
 
+        CreateMap<CompanyForUpdateDto, Company>();
+
         CreateMap<Employee, EmployeeDto>();
 
         CreateMap<EmployeeForCreationDto, Employee>();
