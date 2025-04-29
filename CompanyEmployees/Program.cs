@@ -2,15 +2,15 @@ using CompanyEmployees;
 using CompanyEmployees.Extensions;
 using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Formatters;
+using Microsoft.Extensions.Options;
 using NLog;
 
 var builder = WebApplication.CreateBuilder(args);
 
 //Load Config file for logger
 LogManager.Setup().LoadConfigurationFromFile(string.Concat(Directory.GetCurrentDirectory(), "./nlog.config"));
-
 // Add services to the container.
-
 // CORSS Origin Resource Sharing Configuration
 builder.Services.ConfigureCors();
 // IIS Integration Configuration
@@ -27,6 +27,16 @@ builder.Services.ConfigureSqlContext(builder.Configuration);
 builder.Services.AddAutoMapper(typeof(Program));
 // Register Global Exceptional Handling Service
 builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
+#region
+//we are creating a local
+//function. This function configures support for JSON Patch using
+//Newtonsoft.Json while leaving the other formatters unchanged
+NewtonsoftJsonPatchInputFormatter GetJsonPatchInputFormatter() =>
+    new ServiceCollection().AddLogging().AddMvc().AddNewtonsoftJson()
+    .Services.BuildServiceProvider()
+    .GetRequiredService<IOptions<MvcOptions>>().Value.InputFormatters
+    .OfType<NewtonsoftJsonPatchInputFormatter>().First();
+#endregion
 // Enable our custom responses for the API's from the Actions
 builder.Services.Configure<ApiBehaviorOptions>(options =>
 {
@@ -44,6 +54,7 @@ builder.Services.AddControllers(config => {
     //server doesn’t support, it should return the 406 Not Acceptable status
     //code
     config.ReturnHttpNotAcceptable = true;
+    config.InputFormatters.Insert(0,GetJsonPatchInputFormatter());
 }).AddXmlDataContractSerializerFormatters().AddApplicationPart(typeof(CompanyEmployees.Presentation.AssemblyReference).Assembly);
 #endregion
 

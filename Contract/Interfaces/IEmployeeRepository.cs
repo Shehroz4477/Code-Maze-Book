@@ -10,7 +10,7 @@ namespace Contract.Interfaces;
 public interface IEmployeeRepository
 {
     IEnumerable<Employee> GetEmployees(Guid companyId, bool trackChanges);
-    Employee GetEmployee(Guid employeeId, Guid id, bool trackChanges);
+    Employee GetEmployee(Guid companyId, Guid id, bool trackChanges);
     void CreateEmployeeForCompany(Guid companyId, Employee employee, bool trackChanges);
     void DeleteEmplyee(Employee employee);
 }

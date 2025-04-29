@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
 using Service.Contracts.Interfaces;
 using Shared.DataTransferObjects;
@@ -62,6 +63,22 @@ public class EmployeesController : ControllerBase
         }
 
         _service.EmployeeService.UpdateEmployeeForCompany(companyId, id, employeeForUpdateDto, comTrackChanges: false, empTrackChanges: true);
+        return NoContent();
+    }
+
+    [HttpPatch("{id:guid}")]
+    public IActionResult PartiallyUpdateEmployeeForCompany(Guid companyId, Guid id, [FromBody] JsonPatchDocument<EmployeeForUpdateDto> patchDoc)
+    {
+        if(patchDoc == null)
+        {
+            return BadRequest("Employee data for updation is missing.");
+        }
+
+        var result = _service.EmployeeService.GetEmployeeForPatch(companyId, id, comTrackChanges:false, empTrackChanges:true);
+
+        patchDoc.ApplyTo(result.employeeToPatch);
+
+        _service.EmployeeService.SaveChangesForPatch(result.employeeToPatch, result.employee);
         return NoContent();
     }
 }
