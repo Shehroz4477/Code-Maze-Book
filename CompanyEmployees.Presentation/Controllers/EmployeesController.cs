@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
 using Service.Contracts.Interfaces;
@@ -42,6 +43,11 @@ public class EmployeesController : ControllerBase
             return BadRequest("Employee details is missing");
         }
 
+        if(!ModelState.IsValid)
+        {
+            return UnprocessableEntity(ModelState);
+        }
+
         var employee = _service.EmployeeService.CreateEmployeeForComapny(companyId, employeeForCreation, trackChanges:false);
 
         return CreatedAtRoute("GetEmployeeForCompany", new { companyId, id = employee.Id }, employee);
@@ -62,6 +68,11 @@ public class EmployeesController : ControllerBase
             return BadRequest("Employee data is missing for updation");
         }
 
+        if (!ModelState.IsValid)
+        {
+            return UnprocessableEntity(ModelState);
+        }
+
         _service.EmployeeService.UpdateEmployeeForCompany(companyId, id, employeeForUpdateDto, comTrackChanges: false, empTrackChanges: true);
         return NoContent();
     }
@@ -78,7 +89,13 @@ public class EmployeesController : ControllerBase
 
         var result = _service.EmployeeService.GetEmployeeForPatch(companyId, id, comTrackChanges:false, empTrackChanges:true);
 
-        employeePatchDoc.ApplyTo(result.employeeToPatch);
+        employeePatchDoc.ApplyTo(result.employeeToPatch, ModelState);
+        TryValidateModel(result.employeeToPatch);
+
+        if(!ModelState.IsValid)
+        {
+            return UnprocessableEntity(ModelState);
+        }
 
         _service.EmployeeService.SaveChangesForPatch(result.employeeToPatch, result.employee);
         return NoContent();

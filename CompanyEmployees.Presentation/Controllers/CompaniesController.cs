@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using CompanyEmployees.Presentation.ModelBinders;
+using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using Service.Contracts.Interfaces;
 using Shared.DataTransferObjects;
@@ -52,6 +53,11 @@ public class CompaniesController : ControllerBase
             return BadRequest("Company details is missing");
         }
 
+        if(!ModelState.IsValid)
+        {
+            return UnprocessableEntity(ModelState);
+        }
+
         var createdCompany = _service.CompanyService.CreateCompany(company);
         return CreatedAtRoute("CompanyById", new { id = createdCompany.Id }, createdCompany);
     }
@@ -84,6 +90,11 @@ public class CompaniesController : ControllerBase
         if(companyForUpdateDto == null)
         {
             return BadRequest("Company details is missing for updation.");
+        }
+
+        if(!ModelState.IsValid)
+        {
+            return UnprocessableEntity(ModelState);
         }
 
         _service.CompanyService.UpdateCompany(id, companyForUpdateDto, trackChanges:true);
