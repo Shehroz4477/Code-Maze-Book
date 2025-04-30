@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
 using Service.Contracts.Interfaces;
@@ -88,7 +89,13 @@ public class EmployeesController : ControllerBase
 
         var result = _service.EmployeeService.GetEmployeeForPatch(companyId, id, comTrackChanges:false, empTrackChanges:true);
 
-        employeePatchDoc.ApplyTo(result.employeeToPatch);
+        employeePatchDoc.ApplyTo(result.employeeToPatch, ModelState);
+        TryValidateModel(result.employeeToPatch);
+
+        if(!ModelState.IsValid)
+        {
+            return UnprocessableEntity(ModelState);
+        }
 
         _service.EmployeeService.SaveChangesForPatch(result.employeeToPatch, result.employee);
         return NoContent();
