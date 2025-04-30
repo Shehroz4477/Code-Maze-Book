@@ -2,15 +2,15 @@ using CompanyEmployees;
 using CompanyEmployees.Extensions;
 using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Formatters;
+using Microsoft.Extensions.Options;
 using NLog;
 
 var builder = WebApplication.CreateBuilder(args);
 
 //Load Config file for logger
 LogManager.Setup().LoadConfigurationFromFile(string.Concat(Directory.GetCurrentDirectory(), "./nlog.config"));
-
 // Add services to the container.
-
 // CORSS Origin Resource Sharing Configuration
 builder.Services.ConfigureCors();
 // IIS Integration Configuration
@@ -44,6 +44,7 @@ builder.Services.AddControllers(config => {
     //server doesn’t support, it should return the 406 Not Acceptable status
     //code
     config.ReturnHttpNotAcceptable = true;
+    config.InputFormatters.Insert(0, InputOptionFormatters.GetJsonPatchInputFormatter());
 }).AddXmlDataContractSerializerFormatters().AddApplicationPart(typeof(CompanyEmployees.Presentation.AssemblyReference).Assembly);
 #endregion
 
