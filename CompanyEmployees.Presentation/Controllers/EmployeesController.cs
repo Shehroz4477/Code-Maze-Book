@@ -66,6 +66,8 @@ public class EmployeesController : ControllerBase
         return NoContent();
     }
 
+    // the PATCH request’s media type, we
+    // should use application/json-patch+json
     [HttpPatch("{id:guid}")]
     public IActionResult PartiallyUpdateEmployeeForCompany(Guid companyId, Guid id, [FromBody] JsonPatchDocument<EmployeeForUpdateDto> employeePatchDoc)
     {
