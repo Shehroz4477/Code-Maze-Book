@@ -6,4 +6,7 @@ using System.Threading.Tasks;
 
 namespace Shared.DataTransferObjects;
 
-public record class EmployeeForUpdateDto(string Name, int Age, string Position);
+public record class EmployeeForUpdateDto: EmployeeForManipulationDto
+{
+    //TODO
+}

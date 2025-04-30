@@ -67,6 +67,11 @@ public class EmployeesController : ControllerBase
             return BadRequest("Employee data is missing for updation");
         }
 
+        if (!ModelState.IsValid)
+        {
+            return UnprocessableEntity(ModelState);
+        }
+
         _service.EmployeeService.UpdateEmployeeForCompany(companyId, id, employeeForUpdateDto, comTrackChanges: false, empTrackChanges: true);
         return NoContent();
     }
