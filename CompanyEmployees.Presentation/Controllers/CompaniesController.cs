@@ -52,6 +52,11 @@ public class CompaniesController : ControllerBase
             return BadRequest("Company details is missing");
         }
 
+        if(!ModelState.IsValid)
+        {
+            return UnprocessableEntity(ModelState);
+        }
+
         var createdCompany = _service.CompanyService.CreateCompany(company);
         return CreatedAtRoute("CompanyById", new { id = createdCompany.Id }, createdCompany);
     }

@@ -42,6 +42,11 @@ public class EmployeesController : ControllerBase
             return BadRequest("Employee details is missing");
         }
 
+        if(!ModelState.IsValid)
+        {
+            return UnprocessableEntity(ModelState);
+        }
+
         var employee = _service.EmployeeService.CreateEmployeeForComapny(companyId, employeeForCreation, trackChanges:false);
 
         return CreatedAtRoute("GetEmployeeForCompany", new { companyId, id = employee.Id }, employee);
