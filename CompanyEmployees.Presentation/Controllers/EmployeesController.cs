@@ -67,16 +67,16 @@ public class EmployeesController : ControllerBase
     }
 
     [HttpPatch("{id:guid}")]
-    public IActionResult PartiallyUpdateEmployeeForCompany(Guid companyId, Guid id, [FromBody] JsonPatchDocument<EmployeeForUpdateDto> patchDoc)
+    public IActionResult PartiallyUpdateEmployeeForCompany(Guid companyId, Guid id, [FromBody] JsonPatchDocument<EmployeeForUpdateDto> employeePatchDoc)
     {
-        if(patchDoc == null)
+        if(employeePatchDoc == null)
         {
             return BadRequest("Employee data for updation is missing.");
         }
 
         var result = _service.EmployeeService.GetEmployeeForPatch(companyId, id, comTrackChanges:false, empTrackChanges:true);
 
-        patchDoc.ApplyTo(result.employeeToPatch);
+        employeePatchDoc.ApplyTo(result.employeeToPatch);
 
         _service.EmployeeService.SaveChangesForPatch(result.employeeToPatch, result.employee);
         return NoContent();
