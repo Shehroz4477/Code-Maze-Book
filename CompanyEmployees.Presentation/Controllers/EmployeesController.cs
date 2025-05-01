@@ -22,21 +22,21 @@ public class EmployeesController : ControllerBase
     }
 
     [HttpGet]
-    public IActionResult GetEmployeesForCompany(Guid companyId)
+    public async Task<IActionResult> GetEmployeesForCompany(Guid companyId)
     {
-        var employees = _service.EmployeeService.GetEmployees(companyId, trackChanges:false);
+        var employees = await _service.EmployeeService.GetEmployeesAsync(companyId, trackChanges: false);
         return Ok(employees);
     }
 
     [HttpGet("{id:guid}", Name = "GetEmployeeForCompany")]
-    public IActionResult GetEmployeeForCompany(Guid companyId, Guid id)
+    public async Task<IActionResult> GetEmployeeForCompany(Guid companyId, Guid id)
     {
-        var employee = _service.EmployeeService.GetEmployee(companyId, id, trackChanges:false);
+        var employee = await _service.EmployeeService.GetEmployeeAsync(companyId, id, trackChanges: false);
         return Ok(employee);
     }
 
     [HttpPost]
-    public IActionResult CreateEmployeeForCompany(Guid companyId,[FromBody] EmployeeForCreationDto employeeForCreation)
+    public async Task<IActionResult> CreateEmployeeForCompany(Guid companyId,[FromBody] EmployeeForCreationDto employeeForCreation)
     {
         if(employeeForCreation == null)
         {
@@ -48,20 +48,20 @@ public class EmployeesController : ControllerBase
             return UnprocessableEntity(ModelState);
         }
 
-        var employee = _service.EmployeeService.CreateEmployeeForComapny(companyId, employeeForCreation, trackChanges:false);
+        var employee = await _service.EmployeeService.CreateEmployeeForComapnyAsync(companyId, employeeForCreation, trackChanges: false);
 
         return CreatedAtRoute("GetEmployeeForCompany", new { companyId, id = employee.Id }, employee);
     }
 
     [HttpDelete("{id:guid}")]
-    public IActionResult DeleteEmplyeeForCompany(Guid companyId, Guid id)
+    public async Task<IActionResult> DeleteEmplyeeForCompany(Guid companyId, Guid id)
     {
-        _service.EmployeeService.DeleteEmployeeForComapny(companyId, id, trackChanges: false);
+        await _service.EmployeeService.DeleteEmployeeForComapnyAsync(companyId, id, trackChanges: false);
         return NoContent();
     }
 
     [HttpPut("{id:guid}")]
-    public IActionResult UpdateEmployeeForCompany(Guid companyId, Guid id, [FromBody]EmployeeForUpdateDto employeeForUpdateDto)
+    public async Task<IActionResult> UpdateEmployeeForCompany(Guid companyId, Guid id, [FromBody]EmployeeForUpdateDto employeeForUpdateDto)
     {
         if(employeeForUpdateDto == null)
         {
@@ -73,21 +73,21 @@ public class EmployeesController : ControllerBase
             return UnprocessableEntity(ModelState);
         }
 
-        _service.EmployeeService.UpdateEmployeeForCompany(companyId, id, employeeForUpdateDto, comTrackChanges: false, empTrackChanges: true);
+        await _service.EmployeeService.UpdateEmployeeForCompanyAsync(companyId, id, employeeForUpdateDto, comTrackChanges: false, empTrackChanges: true);
         return NoContent();
     }
 
     // the PATCH request’s media type, we
     // should use application/json-patch+json
     [HttpPatch("{id:guid}")]
-    public IActionResult PartiallyUpdateEmployeeForCompany(Guid companyId, Guid id, [FromBody] JsonPatchDocument<EmployeeForUpdateDto> employeePatchDoc)
+    public async Task<IActionResult> PartiallyUpdateEmployeeForCompany(Guid companyId, Guid id, [FromBody] JsonPatchDocument<EmployeeForUpdateDto> employeePatchDoc)
     {
         if(employeePatchDoc == null)
         {
             return BadRequest("Employee data for updation is missing.");
         }
 
-        var result = _service.EmployeeService.GetEmployeeForPatch(companyId, id, comTrackChanges:false, empTrackChanges:true);
+        var result = await _service.EmployeeService.GetEmployeeForPatchAsync(companyId, id, comTrackChanges: false, empTrackChanges: true);
 
         employeePatchDoc.ApplyTo(result.employeeToPatch, ModelState);
         TryValidateModel(result.employeeToPatch);
@@ -97,7 +97,7 @@ public class EmployeesController : ControllerBase
             return UnprocessableEntity(ModelState);
         }
 
-        _service.EmployeeService.SaveChangesForPatch(result.employeeToPatch, result.employee);
+        await _service.EmployeeService.SaveChangesForPatchAsync(result.employeeToPatch, result.employee);
         return NoContent();
     }
 }

@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Contract.Interfaces;
 using Entities.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace Repository;
 
@@ -14,16 +15,16 @@ public class CompanyRepository: RepositoryBase<Company>, ICompanyRepository
     {
         //TODO 
     }
-    public IEnumerable<Company> GetAllCompanies(bool trackChanges) =>
-        FindAll(trackChanges)
+    public async Task<IEnumerable<Company>> GetAllCompaniesAsync(bool trackChanges) =>
+        await FindAll(trackChanges)
             .OrderBy(entity => entity.Name)
-            .ToList();
-    public Company GetCompany(Guid companyId, bool trackChanges) =>
-        FindByCondition(entity => entity.Id.Equals(companyId), trackChanges)
-            .SingleOrDefault();
+            .ToListAsync();
+    public async Task<Company> GetCompanyAsync(Guid companyId, bool trackChanges) =>
+        await FindByCondition(entity => entity.Id.Equals(companyId), trackChanges)
+            .SingleOrDefaultAsync();
     public void CreateCompany(Company company) => Create(company);
-    public IEnumerable<Company> GetByIds(IEnumerable<Guid> ids, bool trackChanges) =>
-        FindByCondition(entity => ids.Contains(entity.Id), trackChanges)
-            .ToList();
+    public async Task<IEnumerable<Company>> GetByIdsAsync(IEnumerable<Guid> ids, bool trackChanges) =>
+        await FindByCondition(entity => ids.Contains(entity.Id), trackChanges)
+            .ToListAsync();
     public void DeleteCompany(Company company) => Delete(company);
 }
