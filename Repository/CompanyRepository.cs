@@ -15,15 +15,15 @@ public class CompanyRepository: RepositoryBase<Company>, ICompanyRepository
     {
         //TODO 
     }
-    public async Task<IEnumerable<Company>> GetAllCompanies(bool trackChanges) =>
+    public async Task<IEnumerable<Company>> GetAllCompaniesAsync(bool trackChanges) =>
         await FindAll(trackChanges)
             .OrderBy(entity => entity.Name)
             .ToListAsync();
-    public async Task<Company> GetCompany(Guid companyId, bool trackChanges) =>
+    public async Task<Company> GetCompanyAsync(Guid companyId, bool trackChanges) =>
         await FindByCondition(entity => entity.Id.Equals(companyId), trackChanges)
             .SingleOrDefaultAsync();
     public void CreateCompany(Company company) => Create(company);
-    public async Task<IEnumerable<Company>> GetByIds(IEnumerable<Guid> ids, bool trackChanges) =>
+    public async Task<IEnumerable<Company>> GetByIdsAsync(IEnumerable<Guid> ids, bool trackChanges) =>
         await FindByCondition(entity => ids.Contains(entity.Id), trackChanges)
             .ToListAsync();
     public void DeleteCompany(Company company) => Delete(company);

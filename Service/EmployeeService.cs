@@ -23,29 +23,29 @@ internal sealed class EmployeeService: IEmployeeService
         _logger = logger;
         _mapper = mapper;
     }
-    public IEnumerable<EmployeeDto> GetEmployees(Guid companyId, bool trackChanges)
+    public async Task<IEnumerable<EmployeeDto>> GetEmployeesAsync(Guid companyId, bool trackChanges)
     {
-        var company = _repository.Company.GetCompany(companyId,trackChanges);
+        var company = await _repository.Company.GetCompanyAsync(companyId,trackChanges);
         if(company is null)
         {
             throw new CompanyNotFoundException(companyId);
         }
 
-        var employees = _repository.Employee.GetEmployees(companyId, trackChanges);
+        var employees = await _repository.Employee.GetEmployeesAsync(companyId, trackChanges);
 
         var employeesDto = _mapper.Map<IEnumerable<EmployeeDto>>(employees);
 
         return employeesDto;
     }
-    public EmployeeDto GetEmployee(Guid companyId, Guid id, bool trackChanges)
+    public async Task<EmployeeDto> GetEmployeeAsync(Guid companyId, Guid id, bool trackChanges)
     {
-        var company = _repository.Company.GetCompany(companyId, trackChanges);
+        var company = await _repository.Company.GetCompanyAsync(companyId, trackChanges);
         if(company is null)
         {
             throw new CompanyNotFoundException(companyId);
         }
 
-        var employee = _repository.Employee.GetEmployee(companyId, id, trackChanges);
+        var employee = await _repository.Employee.GetEmployeeAsync(companyId, id, trackChanges);
         if(employee is null)
         {
             throw new EmployeeNotFoundException(id);
@@ -56,9 +56,9 @@ internal sealed class EmployeeService: IEmployeeService
         return employeeDto;
     }
 
-    public EmployeeDto CreateEmployeeForComapny(Guid companyId, EmployeeForCreationDto employeeForCreationDto, bool trackChanges)
+    public async Task<EmployeeDto> CreateEmployeeForComapnyAsync(Guid companyId, EmployeeForCreationDto employeeForCreationDto, bool trackChanges)
     {
-        var company = _repository.Company.GetCompany(companyId, trackChanges);
+        var company = await _repository.Company.GetCompanyAsync(companyId, trackChanges);
         if(company is null)
         {
             throw new CompanyNotFoundException(companyId);
@@ -67,58 +67,58 @@ internal sealed class EmployeeService: IEmployeeService
         var employee = _mapper.Map<Employee>(employeeForCreationDto);
 
         _repository.Employee.CreateEmployeeForCompany(companyId, employee, trackChanges);
-        _repository.Save();
+        await _repository.SaveAsync();
 
         var employeeDto = _mapper.Map<EmployeeDto>(employee);
 
         return employeeDto;
     }
 
-    public void DeleteEmployeeForComapny(Guid companyId, Guid id, bool trackChanges)
+    public async Task DeleteEmployeeForComapnyAsync(Guid companyId, Guid id, bool trackChanges)
     {
-        var company = _repository.Company.GetCompany(companyId, trackChanges);
+        var company = await _repository.Company.GetCompanyAsync(companyId, trackChanges);
         if(company is null)
         {
             throw new CompanyNotFoundException(companyId);
         }
 
-        var employee = _repository.Employee.GetEmployee(companyId, id, trackChanges);
+        var employee = await _repository.Employee.GetEmployeeAsync(companyId, id, trackChanges);
         if(employee is null)
         {
             throw new EmployeeNotFoundException(id);
         }
 
         _repository.Employee.DeleteEmplyee(employee);
-        _repository.Save();
+        await _repository.SaveAsync();
     }
 
-    public void UpdateEmployeeForCompany(Guid companyId, Guid id, EmployeeForUpdateDto employeeForUpdateDto, bool comTrackChanges, bool empTrackChanges)
+    public async Task UpdateEmployeeForCompanyAsync(Guid companyId, Guid id, EmployeeForUpdateDto employeeForUpdateDto, bool comTrackChanges, bool empTrackChanges)
     {
-        var company = _repository.Company.GetCompany(companyId, comTrackChanges);
+        var company = await _repository.Company.GetCompanyAsync(companyId, comTrackChanges);
         if(company == null)
         {
             throw new CompanyNotFoundException(companyId);
         }
 
-        var employee = _repository.Employee.GetEmployee(companyId, id, empTrackChanges);
+        var employee = await _repository.Employee.GetEmployeeAsync(companyId, id, empTrackChanges);
         if(employee == null)
         {
             throw new EmployeeNotFoundException(id);
         }
 
         _mapper.Map(employeeForUpdateDto, employee);
-        _repository.Save();
+        await _repository.SaveAsync();
     }
 
-    public (EmployeeForUpdateDto employeeToPatch, Employee employee) GetEmployeeForPatch(Guid companyId, Guid id, bool comTrackChanges, bool empTrackChanges)
+    public async Task<(EmployeeForUpdateDto employeeToPatch, Employee employee)> GetEmployeeForPatchAsync(Guid companyId, Guid id, bool comTrackChanges, bool empTrackChanges)
     {
-        var company = _repository.Company.GetCompany(companyId, empTrackChanges);
+        var company = await _repository.Company.GetCompanyAsync(companyId, empTrackChanges);
         if( company == null)
         {
             throw new CompanyNotFoundException(companyId);
         }
 
-        var employee = _repository.Employee.GetEmployee(companyId, id, empTrackChanges);
+        var employee = await _repository.Employee.GetEmployeeAsync(companyId, id, empTrackChanges);
         if( employee == null)
         {
             throw new EmployeeNotFoundException(id);
@@ -128,9 +128,9 @@ internal sealed class EmployeeService: IEmployeeService
         return (employeeToPatch: employeeToPatch, employee: employee);
     }
 
-    public void SaveChangesForPatch(EmployeeForUpdateDto employeeToPatch, Employee employee)
+    public async  Task SaveChangesForPatchAsync(EmployeeForUpdateDto employeeToPatch, Employee employee)
     {
         _mapper.Map(employeeToPatch, employee);
-        _repository.Save();
+        await _repository.SaveAsync();
     }
 }
