@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using CompanyEmployees.Presentation.ActionFilters;
 using CompanyEmployees.Presentation.ModelBinders;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
@@ -46,17 +47,18 @@ public class CompaniesController : ControllerBase
     }
 
     [HttpPost]
+    [ServiceFilter(typeof(ValidationFilterAttribute))]
     public async Task<IActionResult> CreateCompanuy([FromBody] CompanyForCreationDto company)
     {
-        if (company == null)
-        {
-            return BadRequest("Company details is missing");
-        }
+        //if (company == null)
+        //{
+        //    return BadRequest("Company details is missing");
+        //}
 
-        if(!ModelState.IsValid)
-        {
-            return UnprocessableEntity(ModelState);
-        }
+        //if(!ModelState.IsValid)
+        //{
+        //    return UnprocessableEntity(ModelState);
+        //}
 
         var createdCompany = await _service.CompanyService.CreateCompanyAsync(company);
         return CreatedAtRoute("CompanyById", new { id = createdCompany.Id }, createdCompany);
@@ -85,17 +87,18 @@ public class CompaniesController : ControllerBase
     }
 
     [HttpPut("{id:guid}")]
+    [ServiceFilter(typeof(ValidationFilterAttribute))]
     public async Task<IActionResult> UpdateCompany(Guid id, [FromBody]CompanyForUpdateDto companyForUpdateDto)
     {
-        if(companyForUpdateDto == null)
-        {
-            return BadRequest("Company details is missing for updation.");
-        }
+        //if(companyForUpdateDto == null)
+        //{
+        //    return BadRequest("Company details is missing for updation.");
+        //}
 
-        if(!ModelState.IsValid)
-        {
-            return UnprocessableEntity(ModelState);
-        }
+        //if(!ModelState.IsValid)
+        //{
+        //    return UnprocessableEntity(ModelState);
+        //}
 
         await _service.CompanyService.UpdateCompanyAsync(id, companyForUpdateDto, trackChanges:true);
         return NoContent();
