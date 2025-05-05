@@ -29,7 +29,7 @@ public class EmployeesController : ControllerBase
     {
         var pagedResult = await _service.EmployeeService.GetEmployeesAsync(companyId, employeeParameters, trackChanges: false);
 
-        //Response.Headers.Append("X-Pagination", JsonSerializer.Serialize(pagedResult.metaData));
+        Response.Headers.Append("X-Pagination", JsonSerializer.Serialize(pagedResult.metaData));
         //var employees = await _service.EmployeeService.GetEmployeesAsync(companyId, employeeParameters, trackChanges: false);
         return Ok(pagedResult.employees);
     }

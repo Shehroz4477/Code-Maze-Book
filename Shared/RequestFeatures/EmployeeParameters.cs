@@ -8,5 +8,8 @@ namespace Shared.RequestFeatures;
 
 public class EmployeeParameters : RequestParameters
 {
-    //TODO
+    public int MinAge { get; set; }
+    public int MaxAge { get; set; } = int.MaxValue;
+
+    public bool ValidRange => MaxAge > MinAge;
 }
