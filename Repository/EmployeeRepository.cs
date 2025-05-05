@@ -24,13 +24,13 @@ public class EmployeeRepository: RepositoryBase<Employee>, IEmployeeRepository
     //        .ToListAsync();
     public async Task<PagedList<Employee>> GetEmployeesAsync(Guid companyId, EmployeeParameters employeeParameters, bool trackChanges)
     {
-        var employee = await FindByCondition(entity => entity.CompanyId.Equals(companyId), trackChanges)
+        var employee = await FindByCondition(entity => entity.CompanyId.Equals(companyId) && (entity.Age >= employeeParameters.MinAge && entity.Age <= employeeParameters.MaxAge), trackChanges)
             .OrderBy(entity => entity.Name)
             .Skip((employeeParameters.PageNumber - 1) * employeeParameters.PageSize)
             .Take(employeeParameters.PageSize)
             .ToListAsync();
 
-        var count = await FindByCondition(entity => entity.CompanyId.Equals(companyId), trackChanges).CountAsync();
+        var count = await FindByCondition(entity => entity.CompanyId.Equals(companyId) && (entity.Age >= employeeParameters.MinAge && entity.Age <= employeeParameters.MaxAge), trackChanges).CountAsync();
 
         return new PagedList<Employee>(employee, count, employeeParameters.PageNumber, employeeParameters.PageSize);
     }

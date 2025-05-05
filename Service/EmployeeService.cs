@@ -31,6 +31,11 @@ internal sealed class EmployeeService: IEmployeeService
         //{
         //    throw new CompanyNotFoundException(companyId);
         //}
+        if(!employeeParameters.ValidRange)
+        {
+            throw new MaxAgeRangeBadRequestException();
+        }
+
         await _GetCompanyAndCheckIfItExists(companyId, trackChanges);
 
         var employeesWithMetaData = await _repository.Employee.GetEmployeesAsync(companyId, employeeParameters, trackChanges);
