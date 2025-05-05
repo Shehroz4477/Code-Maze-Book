@@ -21,6 +21,8 @@ builder.Services.ConfigureLoggerService();
 builder.Services.ConfigureRepositoryManager();
 // Service Manager Configuration (Service Layer)
 builder.Services.ConfigureServiceManager();
+// Filter Attribute Configuration 
+builder.Services.ConfigureFilterAttribute();
 // SqlContext Configuartion
 builder.Services.ConfigureSqlContext(builder.Configuration);
 // Register AutoMapper Package

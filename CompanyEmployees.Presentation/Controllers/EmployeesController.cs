@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http.HttpResults;
+using CompanyEmployees.Presentation.ActionFilters;
 using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
 using Service.Contracts.Interfaces;
@@ -36,17 +36,18 @@ public class EmployeesController : ControllerBase
     }
 
     [HttpPost]
+    [ServiceFilter(typeof(ValidationFilterAttribute))]
     public async Task<IActionResult> CreateEmployeeForCompany(Guid companyId,[FromBody] EmployeeForCreationDto employeeForCreation)
     {
-        if(employeeForCreation == null)
-        {
-            return BadRequest("Employee details is missing");
-        }
+        //if(employeeForCreation == null)
+        //{
+        //    return BadRequest("Employee details is missing");
+        //}
 
-        if(!ModelState.IsValid)
-        {
-            return UnprocessableEntity(ModelState);
-        }
+        //if(!ModelState.IsValid)
+        //{
+        //    return UnprocessableEntity(ModelState);
+        //}
 
         var employee = await _service.EmployeeService.CreateEmployeeForComapnyAsync(companyId, employeeForCreation, trackChanges: false);
 
@@ -61,17 +62,18 @@ public class EmployeesController : ControllerBase
     }
 
     [HttpPut("{id:guid}")]
+    [ServiceFilter(typeof(ValidationFilterAttribute))]
     public async Task<IActionResult> UpdateEmployeeForCompany(Guid companyId, Guid id, [FromBody]EmployeeForUpdateDto employeeForUpdateDto)
     {
-        if(employeeForUpdateDto == null)
-        {
-            return BadRequest("Employee data is missing for updation");
-        }
+        //if(employeeForUpdateDto == null)
+        //{
+        //    return BadRequest("Employee data is missing for updation");
+        //}
 
-        if (!ModelState.IsValid)
-        {
-            return UnprocessableEntity(ModelState);
-        }
+        //if (!ModelState.IsValid)
+        //{
+        //    return UnprocessableEntity(ModelState);
+        //}
 
         await _service.EmployeeService.UpdateEmployeeForCompanyAsync(companyId, id, employeeForUpdateDto, comTrackChanges: false, empTrackChanges: true);
         return NoContent();
