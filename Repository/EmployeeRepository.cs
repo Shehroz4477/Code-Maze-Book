@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Contract.Interfaces;
 using Entities.Models;
 using Microsoft.EntityFrameworkCore;
+using Repository.Extensions;
 using Shared.RequestFeatures;
 
 namespace Repository;
@@ -24,7 +25,9 @@ public class EmployeeRepository: RepositoryBase<Employee>, IEmployeeRepository
     //        .ToListAsync();
     public async Task<PagedList<Employee>> GetEmployeesAsync(Guid companyId, EmployeeParameters employeeParameters, bool trackChanges)
     {
-        var employee = await FindByCondition(entity => entity.CompanyId.Equals(companyId) && (entity.Age >= employeeParameters.MinAge && entity.Age <= employeeParameters.MaxAge), trackChanges)
+        var employee = await FindByCondition(entity => entity.CompanyId.Equals(companyId), trackChanges)
+            .FilterEmployees(employeeParameters.MinAge, employeeParameters.MaxAge)
+            .Search(employeeParameters.SearchTerm)
             .OrderBy(entity => entity.Name)
             .Skip((employeeParameters.PageNumber - 1) * employeeParameters.PageSize)
             .Take(employeeParameters.PageSize)
