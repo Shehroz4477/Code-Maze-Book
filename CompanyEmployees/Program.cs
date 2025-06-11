@@ -1,10 +1,13 @@
 using CompanyEmployees;
 using CompanyEmployees.Extensions;
+using Contract.Interfaces;
 using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Formatters;
 using Microsoft.Extensions.Options;
 using NLog;
+using Service.DataShaping;
+using Shared.DataTransferObjects;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -21,6 +24,8 @@ builder.Services.ConfigureLoggerService();
 builder.Services.ConfigureRepositoryManager();
 // Service Manager Configuration (Service Layer)
 builder.Services.ConfigureServiceManager();
+// DataShaper Class Registration
+builder.Services.AddScoped<IDataShaper<EmployeeDto>, DataShaper<EmployeeDto>>();
 // Filter Attribute Configuration 
 builder.Services.ConfigureFilterAttribute();
 // SqlContext Configuartion

@@ -28,12 +28,19 @@ public class EmployeeRepository: RepositoryBase<Employee>, IEmployeeRepository
         var employee = await FindByCondition(entity => entity.CompanyId.Equals(companyId), trackChanges)
             .FilterEmployees(employeeParameters.MinAge, employeeParameters.MaxAge)
             .Search(employeeParameters.SearchTerm)
-            .OrderBy(entity => entity.Name)
+            .Sort(employeeParameters.OrderBy)
             .Skip((employeeParameters.PageNumber - 1) * employeeParameters.PageSize)
             .Take(employeeParameters.PageSize)
             .ToListAsync();
 
-        var count = await FindByCondition(entity => entity.CompanyId.Equals(companyId) && (entity.Age >= employeeParameters.MinAge && entity.Age <= employeeParameters.MaxAge), trackChanges).CountAsync();
+        var count = await FindByCondition
+            (
+                entity => 
+                entity.CompanyId.Equals(companyId) && 
+                (entity.Age >= employeeParameters.MinAge && 
+                entity.Age <= employeeParameters.MaxAge) &&
+                entity.Name.ToLower().Contains(employeeParameters.SearchTerm.ToLower()), trackChanges
+            ).CountAsync();
 
         return new PagedList<Employee>(employee, count, employeeParameters.PageNumber, employeeParameters.PageSize);
     }
