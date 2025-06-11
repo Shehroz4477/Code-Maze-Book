@@ -40,7 +40,7 @@ public class DataShaper<T> : IDataShaper<T> where T : class
 
             foreach (var field in fields)
             {
-                var property = Properties.FirstOrDefault(p => p.Name.Equals(field, StringComparison.InvariantCultureIgnoreCase));
+                var property = Properties.FirstOrDefault(p => p.Name.Equals(field.Trim(), StringComparison.InvariantCultureIgnoreCase));
 
                 if(property != null)
                 {
