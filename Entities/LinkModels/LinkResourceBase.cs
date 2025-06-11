@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Entities.LinkModels;
 
-internal class LinkResourceBase
+public class LinkResourceBase
 {
     public LinkResourceBase()
     {
