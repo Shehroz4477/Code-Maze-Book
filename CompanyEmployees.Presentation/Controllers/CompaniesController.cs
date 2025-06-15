@@ -22,6 +22,13 @@ public class CompaniesController : ControllerBase
         _service = service;
     }
 
+    [HttpOptions]
+    public IActionResult GetCompaniesOptions()
+    {
+        Response.Headers.Add("Allow", "GET, OPTIONS, POST, PUT DELETE");
+        return Ok();
+    }
+
     [HttpGet]
     public async Task<IActionResult> GetCompanies()
     {
