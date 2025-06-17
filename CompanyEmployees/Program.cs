@@ -34,6 +34,8 @@ builder.Services.ConfigureSqlContext(builder.Configuration);
 builder.Services.AddAutoMapper(typeof(Program));
 // Register Global Exceptional Handling Service
 builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
+// Register Response Caching
+builder.Services.AddResponseCaching();
 // Enable our custom responses for the API's from the Actions
 builder.Services.Configure<ApiBehaviorOptions>(options =>
 {
@@ -81,8 +83,10 @@ app.UseForwardedHeaders(new ForwardedHeadersOptions
     ForwardedHeaders = ForwardedHeaders.All
 });
 
-//CORS configuration added to the application’s pipeline
+// CORS configuration added to the application’s pipeline
 app.UseCors("CorsPolicy");
+// Response Caching Middleware 
+app.UseResponseCaching();
 
 app.UseAuthorization();
 
