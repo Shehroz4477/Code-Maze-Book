@@ -54,6 +54,10 @@ builder.Services.AddControllers(config => {
     //code
     config.ReturnHttpNotAcceptable = true;
     config.InputFormatters.Insert(0, InputOptionFormatters.GetJsonPatchInputFormatter());
+    config.CacheProfiles.Add("120SecondsDuration", new CacheProfile
+    {
+        Duration = 120
+    });
 }).AddXmlDataContractSerializerFormatters().AddApplicationPart(typeof(CompanyEmployees.Presentation.AssemblyReference).Assembly);
 #endregion
 
