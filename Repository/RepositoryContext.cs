@@ -15,6 +15,7 @@ public class RepositoryContext : IdentityDbContext<User>
     {
         base.OnModelCreating(modelBuilder);
 
+        modelBuilder.ApplyConfiguration(new RoleConfiguration());
         modelBuilder.ApplyConfiguration(new ComapnyConfiguration());
         modelBuilder.ApplyConfiguration(new EmployeeConfiguration());
     }
