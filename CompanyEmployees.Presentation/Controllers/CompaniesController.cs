@@ -51,10 +51,12 @@ public class CompaniesController : ControllerBase
 
     [HttpGet("{id:guid}", Name = "CompanyById")]
     //[ResponseCache(Duration = 60)]
-    [OutputCache(Duration = 60)]
+    [OutputCache(Duration = 30)]
     public async Task<IActionResult> GetCompany(Guid id)
     {
         var company = await _service.CompanyService.GetCompanyAsync(id, trackChanges: false);
+        var etag = $"\"{Guid.NewGuid():n}\"";
+        HttpContext.Response.Headers.ETag = etag;
         return Ok(company);
     }
 
