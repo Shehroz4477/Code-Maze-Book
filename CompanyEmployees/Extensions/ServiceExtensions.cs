@@ -59,7 +59,8 @@ public static class ServiceExtensions
     {
         services.AddOutputCache(opts =>
         {
-            opts.AddBasePolicy(bp => bp.Expire(TimeSpan.FromSeconds(10)));
+            //opts.AddBasePolicy(bp => bp.Expire(TimeSpan.FromSeconds(10)));
+            opts.AddPolicy("20SecondsDuration", policy => policy.Expire(TimeSpan.FromSeconds(20)));
         });
     }
 }
