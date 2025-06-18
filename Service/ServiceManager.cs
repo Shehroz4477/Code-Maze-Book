@@ -17,7 +17,7 @@ namespace Service
     {
         private readonly Lazy<ICompanyService> _companyService;
         private readonly Lazy<IEmployeeService> _employeeService;
-        private readonly Lazy<IAuthenticationService> _authenticationService
+        private readonly Lazy<IAuthenticationService> _authenticationService;
         public ServiceManager(IRepositoryManager repository, ILoggerManager logger, IMapper mapper, IDataShaper<EmployeeDto> dataShaper, UserManager<User> userManager, IConfiguration configuration) 
         {
             _companyService = new Lazy<ICompanyService>(() => new CompanyService(repository,logger,mapper));
