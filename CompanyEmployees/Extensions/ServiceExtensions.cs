@@ -1,6 +1,8 @@
 ﻿using CompanyEmployees.Presentation.ActionFilters;
 using Contract.Interfaces;
+using Entities.Models;
 using LoggerService.Services;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Repository;
 using Service;
@@ -62,5 +64,20 @@ public static class ServiceExtensions
             //opts.AddBasePolicy(bp => bp.Expire(TimeSpan.FromSeconds(10)));
             opts.AddPolicy("20SecondsDuration", policy => policy.Expire(TimeSpan.FromSeconds(20)));
         });
+    }
+
+    public static void ConfigureIdentity(this IServiceCollection services)
+    {
+        var builder = services.AddIdentity<User, IdentityRole>(identityOptions =>
+        {
+            identityOptions.Password.RequireDigit = true;
+            identityOptions.Password.RequireLowercase = true;
+            identityOptions.Password.RequireUppercase = true;
+            identityOptions.Password.RequireNonAlphanumeric = true;
+            identityOptions.Password.RequiredLength = 10;
+            identityOptions.User.RequireUniqueEmail = true;
+        })
+        .AddEntityFrameworkStores<RepositoryContext>()
+        .AddDefaultTokenProviders();
     }
 }
