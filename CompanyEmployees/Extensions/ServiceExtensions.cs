@@ -57,6 +57,9 @@ public static class ServiceExtensions
 
     public static void ConfigureOutputCaching(this IServiceCollection services)
     {
-        services.AddOutputCache();
+        services.AddOutputCache(opts =>
+        {
+            opts.AddBasePolicy(bp => bp.Expire(TimeSpan.FromSeconds(10)));
+        });
     }
 }
