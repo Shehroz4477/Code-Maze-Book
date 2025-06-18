@@ -34,6 +34,10 @@ builder.Services.ConfigureSqlContext(builder.Configuration);
 builder.Services.AddAutoMapper(typeof(Program));
 // Register Global Exceptional Handling Service
 builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
+// Register Response Caching
+//builder.Services.AddResponseCaching();
+// Register Output Caching
+builder.Services.ConfigureOutputCaching();
 // Enable our custom responses for the API's from the Actions
 builder.Services.Configure<ApiBehaviorOptions>(options =>
 {
@@ -52,6 +56,10 @@ builder.Services.AddControllers(config => {
     //code
     config.ReturnHttpNotAcceptable = true;
     config.InputFormatters.Insert(0, InputOptionFormatters.GetJsonPatchInputFormatter());
+    //config.CacheProfiles.Add("120SecondsDuration", new CacheProfile
+    //{
+    //    Duration = 120
+    //});
 }).AddXmlDataContractSerializerFormatters().AddApplicationPart(typeof(CompanyEmployees.Presentation.AssemblyReference).Assembly);
 #endregion
 
@@ -81,8 +89,12 @@ app.UseForwardedHeaders(new ForwardedHeadersOptions
     ForwardedHeaders = ForwardedHeaders.All
 });
 
-//CORS configuration added to the application’s pipeline
+// CORS configuration added to the application’s pipeline
 app.UseCors("CorsPolicy");
+// Response Caching Middleware 
+//app.UseResponseCaching();
+// Output Caching Middleware
+app.UseOutputCache();
 
 app.UseAuthorization();
 

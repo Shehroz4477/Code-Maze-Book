@@ -49,4 +49,18 @@ public static class ServiceExtensions
     {
         services.AddDbContext<RepositoryContext>(opts => opts.UseSqlServer(configuration.GetConnectionString("sqlConnection")));
     }
+
+    public static void ConfigureResponseCaching(this IServiceCollection services)
+    {
+        services.AddResponseCaching();
+    }
+
+    public static void ConfigureOutputCaching(this IServiceCollection services)
+    {
+        services.AddOutputCache(opts =>
+        {
+            //opts.AddBasePolicy(bp => bp.Expire(TimeSpan.FromSeconds(10)));
+            opts.AddPolicy("20SecondsDuration", policy => policy.Expire(TimeSpan.FromSeconds(20)));
+        });
+    }
 }
