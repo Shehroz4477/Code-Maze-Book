@@ -54,4 +54,9 @@ public static class ServiceExtensions
     {
         services.AddResponseCaching();
     }
+
+    public static void ConfigureOutputCaching(this IServiceCollection services)
+    {
+        services.AddOutputCache();
+    }
 }
