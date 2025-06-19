@@ -42,6 +42,8 @@ builder.Services.ConfigureOutputCaching();
 builder.Services.AddAuthentication();
 // Register Identity Configuration
 builder.Services.ConfigureIdentity();
+// Register JWT Configuration
+builder.Services.ConfigureJWT(builder.Configuration);
 // Enable our custom responses for the API's from the Actions
 builder.Services.Configure<ApiBehaviorOptions>(options =>
 {
