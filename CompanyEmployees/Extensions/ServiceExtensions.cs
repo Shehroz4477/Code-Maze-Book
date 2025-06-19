@@ -1,9 +1,12 @@
-﻿using CompanyEmployees.Presentation.ActionFilters;
+﻿using System.Text;
+using CompanyEmployees.Presentation.ActionFilters;
 using Contract.Interfaces;
 using Entities.Models;
 using LoggerService.Services;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 using Repository;
 using Service;
 using Service.Contracts.Interfaces;
@@ -79,5 +82,31 @@ public static class ServiceExtensions
         })
         .AddEntityFrameworkStores<RepositoryContext>()
         .AddDefaultTokenProviders();
+    }
+
+    public static void ConfigureJWT(IServiceCollection services, IConfiguration configuration)
+    {
+        var jwtSettings = configuration.GetSection("JwtSettings");
+        var secretKey = Environment.GetEnvironmentVariable("SECRET");
+
+        services.AddAuthentication(opts =>
+        {
+            opts.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+            opts.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+        })
+        .AddJwtBearer(opts =>
+        {
+            opts.TokenValidationParameters = new TokenValidationParameters
+            {
+                ValidateIssuer = true,
+                ValidateAudience = true,
+                ValidateLifetime = true,
+                ValidateIssuerSigningKey = true,
+
+                ValidIssuer = jwtSettings["validIssuer"],
+                ValidAudience = jwtSettings["validAudience"],
+                IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(secretKey))
+            };
+        });
     }
 }
