@@ -38,6 +38,12 @@ builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
 //builder.Services.AddResponseCaching();
 // Register Output Caching
 builder.Services.ConfigureOutputCaching();
+// Register Authentication Service
+builder.Services.AddAuthentication();
+// Register Identity Configuration
+builder.Services.ConfigureIdentity();
+// Register JWT Configuration
+builder.Services.ConfigureJWT(builder.Configuration);
 // Enable our custom responses for the API's from the Actions
 builder.Services.Configure<ApiBehaviorOptions>(options =>
 {
@@ -96,6 +102,7 @@ app.UseCors("CorsPolicy");
 // Output Caching Middleware
 app.UseOutputCache();
 
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
