@@ -87,6 +87,22 @@ internal sealed class AuthenticationService : IAuthenticationService
         return new TokenDto(AccessToken:accessToken, RefreshToken:refreshToken);
     }
 
+    public async Task<TokenDto> RefreshToken(TokenDto tokenDto)
+    {
+        var principal = GetPrincipalFromExpiredToken(tokenDto.AccessToken);
+
+        var user = await _userManager.FindByNameAsync(principal.Identity.Name);
+        if(user == null || user.RefreshToken != tokenDto.RefreshToken || 
+            user.RefreshTokenExpiryTime <= DateTime.Now)
+        {
+            //TODO
+        }
+
+        _user = user;
+
+        return await CreateToken(populateExp: false);
+    }
+
     private SigningCredentials GetSigningCredentials()
     {
         var key = Encoding.UTF8.GetBytes(Environment.GetEnvironmentVariable("SECRET"));
