@@ -1,4 +1,4 @@
-﻿ 
+﻿
 
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
@@ -6,10 +6,12 @@ using System.Security.Cryptography;
 using System.Text;
 using AutoMapper;
 using Contract.Interfaces;
+using Entities.ConfigurationModels;
 using Entities.Exceptions;
 using Entities.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using Service.Contracts.Interfaces;
 using Shared.DataTransferObjects;
@@ -21,15 +23,18 @@ internal sealed class AuthenticationService : IAuthenticationService
     private readonly ILoggerManager _logger;
     private readonly IMapper _mapper;
     private readonly UserManager<User> _userManager;
-    private readonly IConfiguration _configuration;
+    private readonly IOptions<JwtConfiguration> _configuration;
+    private readonly JwtConfiguration _jwtConfiguration;
     private User? _user;
 
-    public AuthenticationService(ILoggerManager logger, IMapper mapper, UserManager<User> userManager, IConfiguration configuration)
+    public AuthenticationService(ILoggerManager logger, IMapper mapper, UserManager<User> userManager, IOptions<JwtConfiguration> configuration)
     {
         _logger = logger;
         _mapper = mapper;
         _userManager = userManager;
         _configuration = configuration;
+        _jwtConfiguration = _configuration.Value;//new JwtConfiguration();
+        //_configuration.Bind(_jwtConfiguration.Section, _jwtConfiguration);
     }
 
     public async Task<IdentityResult> RegisterUser(UserForRegistrationDto userForRegistrationDto)
@@ -130,15 +135,15 @@ internal sealed class AuthenticationService : IAuthenticationService
 
     private JwtSecurityToken GenerateTokenOptions(SigningCredentials signingCredentials, List<Claim> claims)
     {
-        var jwtSettings = _configuration.GetSection("JwtSettings");
+        //var jwtSettings = _configuration.GetSection("JwtSettings");
 
         var tokenOptions = new JwtSecurityToken
             (
-                issuer: jwtSettings["validIssuer"],
-                audience: jwtSettings["validAudience"],
+                issuer: _jwtConfiguration.ValidIssuer,//jwtSettings["validIssuer"],
+                audience: _jwtConfiguration.ValidAudience,//jwtSettings["validAudience"],
                 claims: claims,
                 signingCredentials: signingCredentials,
-                expires: DateTime.Now.AddMinutes(Convert.ToDouble(jwtSettings["expires"]))
+                expires: DateTime.Now.AddMinutes(Convert.ToDouble(_jwtConfiguration.Expires))//DateTime.Now.AddMinutes(Convert.ToDouble(jwtSettings["expires"]))
             );
 
         return tokenOptions;
@@ -156,7 +161,7 @@ internal sealed class AuthenticationService : IAuthenticationService
 
     private ClaimsPrincipal GetPrincipalFromExpiredToken(string token)
     {
-        var jwtSettings = _configuration.GetSection("JwtSettings");
+        //var jwtSettings = _configuration.GetSection("JwtSettings");
 
         var tokenValidationParameters = new TokenValidationParameters
         {
@@ -165,8 +170,8 @@ internal sealed class AuthenticationService : IAuthenticationService
             ValidateIssuerSigningKey = true,
             IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Environment.GetEnvironmentVariable("SECRET"))),
             ValidateLifetime = true,
-            ValidIssuer = jwtSettings["validIssuer"],
-            ValidAudience = jwtSettings["validAudience"]
+            ValidIssuer = _jwtConfiguration.ValidIssuer,//jwtSettings["validIssuer"],
+            ValidAudience = _jwtConfiguration.ValidAudience//jwtSettings["validAudience"]
         };
 
         var tokenHandler = new JwtSecurityTokenHandler();
