@@ -90,6 +90,14 @@ if (app.Environment.IsProduction())
 //    app.UseDeveloperExceptionPage();
 //}
 
+// swagger application execution pipeline
+app.UseSwagger();
+// swagger UI features 
+app.UseSwaggerUI(s =>
+{
+    s.SwaggerEndpoint("/swagger/swagger.json", "Code Maze API");
+})
+
 app.UseHttpsRedirection();
 //Enables using static files for the request.
 app.UseStaticFiles();
