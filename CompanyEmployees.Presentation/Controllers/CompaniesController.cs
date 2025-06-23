@@ -27,6 +27,7 @@ public class CompaniesController : ControllerBase
     }
 
     [HttpOptions]
+    [ApiExplorerSettings(GroupName = "v1")]
     public IActionResult GetCompaniesOptions()
     {
         Response.Headers.Add("Allow", "GET, OPTIONS, POST, PUT DELETE");
@@ -34,7 +35,9 @@ public class CompaniesController : ControllerBase
     }
 
     [HttpGet]
-    [Authorize(Roles = "Manager")]
+    //[Authorize(Roles = "Manager")]
+    [Authorize]
+ 
     public async Task<IActionResult> GetCompanies()
     {
         //try
