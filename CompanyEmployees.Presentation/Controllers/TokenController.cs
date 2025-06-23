@@ -3,8 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using CompanyEmployees.Presentation.ActionFilters;
 using Microsoft.AspNetCore.Mvc;
 using Service.Contracts.Interfaces;
+using Shared.DataTransferObjects;
 
 namespace CompanyEmployees.Presentation.Controllers;
 
@@ -17,5 +19,14 @@ public class TokenController:ControllerBase
     public TokenController(IServiceManager service)
     {
         _service = service;
+    }
+
+    [HttpPost("refresh")]
+    [ServiceFilter(typeof(ValidationFilterAttribute))]
+    public async Task<IActionResult> Refresh([FromBody] TokenDto tokenDto)
+    {
+        var tokenDtoToReturn = await _service.AuthenticationService.RefreshToken(tokenDto);
+
+        return Ok(tokenDtoToReturn);
     }
 }

@@ -96,7 +96,7 @@ internal sealed class AuthenticationService : IAuthenticationService
         if(user == null || user.RefreshToken != tokenDto.RefreshToken || 
             user.RefreshTokenExpiryTime <= DateTime.Now)
         {
-            throw new RefreshTokenBadRequest()
+            throw new RefreshTokenBadRequest();
         }
 
         _user = user;
