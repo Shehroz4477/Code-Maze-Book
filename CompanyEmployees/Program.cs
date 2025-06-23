@@ -95,8 +95,10 @@ app.UseSwagger();
 // swagger UI features 
 app.UseSwaggerUI(s =>
 {
-    s.SwaggerEndpoint("/swagger/swagger.json", "Code Maze API");
-})
+    s.SwaggerEndpoint("/swagger/v1/swagger.json", "Code Maze API v1");
+    s.SwaggerEndpoint("/swagger/v2/swagger.json", "Code Maze API v2");
+
+});
 
 app.UseHttpsRedirection();
 //Enables using static files for the request.
