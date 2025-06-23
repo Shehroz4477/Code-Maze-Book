@@ -46,6 +46,8 @@ builder.Services.ConfigureIdentity();
 builder.Services.ConfigureJWT(builder.Configuration);
 // Add Jwt Configuration
 builder.Services.AddJwtConfiguration(builder.Configuration);
+// Add Swagger Configuration
+builder.Services.ConfigureSwagger();
 // Enable our custom responses for the API's from the Actions
 builder.Services.Configure<ApiBehaviorOptions>(options =>
 {
@@ -87,6 +89,16 @@ if (app.Environment.IsProduction())
 //{
 //    app.UseDeveloperExceptionPage();
 //}
+
+// swagger application execution pipeline
+app.UseSwagger();
+// swagger UI features 
+app.UseSwaggerUI(s =>
+{
+    s.SwaggerEndpoint("/swagger/v1/swagger.json", "Code Maze API v1");
+    s.SwaggerEndpoint("/swagger/v2/swagger.json", "Code Maze API v2");
+
+});
 
 app.UseHttpsRedirection();
 //Enables using static files for the request.
