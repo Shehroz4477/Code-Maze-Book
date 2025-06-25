@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using CompanyEmployees.Presentation.ActionFilters;
+using CompanyEmployees.Presentation.Extensions;
 using CompanyEmployees.Presentation.ModelBinders;
 using Entities.Response;
 using Microsoft.AspNetCore.Authorization;
@@ -52,7 +53,7 @@ public class CompaniesController : ApiControllerBase
         //throw new Exception("Test");
         //var companies = await _service.CompanyService.GetAllCompaniesAsync(trackChanges: false);
         var baseResult = await _service.CompanyService.GetAllCompaniesAsync(trackChanges: false);
-        var companies = ((ApiOkResponse<IEnumerable<CompanyDto>>)baseResult).Result;
+        var companies = baseResult.GetResult<IEnumerable<CompanyDto>>();
         return Ok(companies);
     }
 
@@ -71,7 +72,7 @@ public class CompaniesController : ApiControllerBase
             return ProcessError(baseResult);
         }
 
-        var company = ((ApiOkResponse<CompanyDto>)baseResult).Result;
+        var company = baseResult.GetResult<CompanyDto>(); ;
         return Ok(company);
     }
 
