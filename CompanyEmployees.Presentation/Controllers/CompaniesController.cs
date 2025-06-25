@@ -4,7 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using CompanyEmployees.Presentation.ActionFilters;
+using CompanyEmployees.Presentation.Extensions;
 using CompanyEmployees.Presentation.ModelBinders;
+using Entities.Response;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
@@ -18,7 +20,7 @@ namespace CompanyEmployees.Presentation.Controllers;
 [ApiController]
 //[ResponseCache(CacheProfileName = "120SecondsDuration")]
 [OutputCache(PolicyName = "20SecondsDuration")]
-public class CompaniesController : ControllerBase
+public class CompaniesController : ApiControllerBase
 {
     private readonly IServiceManager _service;
     public CompaniesController(IServiceManager service)
@@ -37,7 +39,6 @@ public class CompaniesController : ControllerBase
     [HttpGet]
     //[Authorize(Roles = "Manager")]
     [Authorize]
- 
     public async Task<IActionResult> GetCompanies()
     {
         //try
@@ -50,7 +51,9 @@ public class CompaniesController : ControllerBase
         //    return StatusCode(500, "Internal server error");
         //}
         //throw new Exception("Test");
-        var companies = await _service.CompanyService.GetAllCompaniesAsync(trackChanges: false);
+        //var companies = await _service.CompanyService.GetAllCompaniesAsync(trackChanges: false);
+        var baseResult = await _service.CompanyService.GetAllCompaniesAsync(trackChanges: false);
+        var companies = baseResult.GetResult<IEnumerable<CompanyDto>>();
         return Ok(companies);
     }
 
@@ -59,9 +62,17 @@ public class CompaniesController : ControllerBase
     [OutputCache(Duration = 30)]
     public async Task<IActionResult> GetCompany(Guid id)
     {
-        var company = await _service.CompanyService.GetCompanyAsync(id, trackChanges: false);
+        var baseResult = await _service.CompanyService.GetCompanyAsync(id, trackChanges: false);
+
         var etag = $"\"{Guid.NewGuid():n}\"";
         HttpContext.Response.Headers.ETag = etag;
+
+        if(!baseResult.Success)
+        {
+            return ProcessError(baseResult);
+        }
+
+        var company = baseResult.GetResult<CompanyDto>(); ;
         return Ok(company);
     }
 
